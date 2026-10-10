@@ -6,32 +6,47 @@ from src.skills.move_file import move_file
 from src.skills.delete_file import delete_file
 from src.skills.delete_folder import delete_folder
 from src.core.intent_parser import parse_intent
+from src.core.command_router import route_command
+
 
 
 
 def handle_command(command: str) -> None:
-    parsed = parse_intent(command)
-    intent = parsed["intent"]
+    route = route_command(command)
+    intent = route["intent"]
+    skill = route["skill"]
 
+
+    
+     
     if intent == "exit":
         return
-    elif intent == "open_chrome":
+
+    if skill is None:
+        print("GAVIX: Command not recognised yet.")
+        return
+
+    if skill == "open_browser" and intent == "open_chrome":
         command = "open chrome"
-    elif intent == "open_website":
-        command = f"open website {parsed['target']}"
-    elif intent == "open_folder":
-        command = f"open {parsed['target']}"
-    elif intent == "find_files":
-        command = f"find files {parsed['target']}"
-    elif intent == "move_file":
+    elif skill == "open_browser" and intent == "open_website":
+        command = f"open website {route['target']}"
+    elif skill == "open_folder":
+        command = f"open {route['target']}"
+    elif skill == "find_files":
+        command = f"find files {route['target']}"
+    elif skill == "move_file":
         command = "move file"
-    elif intent == "delete_file":
+    elif skill == "delete_file":
         command = "delete file"
-    elif intent == "delete_folder":
+    elif skill == "delete_folder":
         command = "delete folder"
     else:
         print("GAVIX: Command not recognised yet.")
         return
+
+    command = command.strip()
+    normalized = command.lower()
+
 
     command = command.strip()
     normalized = command.lower()
