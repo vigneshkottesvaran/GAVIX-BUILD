@@ -166,6 +166,10 @@ class TestIntentParser(unittest.TestCase):
             with self.subTest(command=command):
                 self.assertEqual(parse_intent(command), {"intent": "find_files", "target": target})
 
+    def test_commands_with_missing_targets_keep_their_intents(self):
+        self.assertEqual(parse_intent("Open website"), {"intent": "open_website"})
+        self.assertEqual(parse_intent("Find files"), {"intent": "find_files"})
+
     def test_case_whitespace_and_punctuation(self):
         self.assertEqual(parse_intent("  dOwNLoAds   FOLDER-ah OPEN pannu!!"),
                          {"intent": "open_folder", "target": "downloads"})

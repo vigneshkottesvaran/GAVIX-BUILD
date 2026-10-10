@@ -62,10 +62,11 @@ def parse_intent(command: str) -> dict:
 
     # Explicit URL commands and the tested website/site suffix form.
     explicit_site = re.fullmatch(
-        r"(?:open\s+(?:website|site)|go\s+to\s+website|visit)\s+(.+)", text
+        r"(?:open\s+(?:website|site)|go\s+to\s+website|visit)(?:\s+(.+))?", text
     )
     if explicit_site:
-        return {"intent": "open_website", "target": explicit_site.group(1).strip()}
+        target = explicit_site.group(1)
+        return {"intent": "open_website", **({"target": target.strip()} if target else {})}
 
     tanglish_site = re.fullmatch(
         rf"(.+?)\s+(?:website|site)\s+{_TRAILING_COMMAND}", text
@@ -82,10 +83,11 @@ def parse_intent(command: str) -> dict:
     # File searches. Strip only recognized trailing command words so keywords
     # remain useful while tested Tanglish command suffixes are not included.
     find_match = re.fullmatch(
-        r"(?:find\s+files|search\s+files|find|search\s+for|look\s+for)\s+(.+)", text
+        r"(?:find\s+files|search\s+files|find|search\s+for|look\s+for)(?:\s+(.+))?", text
     )
     if find_match:
-        return {"intent": "find_files", "target": find_match.group(1).strip()}
+        target = find_match.group(1)
+        return {"intent": "find_files", **({"target": target.strip()} if target else {})}
 
     tanglish_find = re.fullmatch(
         r"(?:files?\s+)?(.+?)\s+(?:thedu|thedi|kandu\s+pidi|search\s+pannu)", text
