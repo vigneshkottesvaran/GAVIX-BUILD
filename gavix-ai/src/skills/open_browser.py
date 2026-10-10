@@ -1,14 +1,25 @@
-
 import subprocess
 import webbrowser
-
+from urllib.parse import urlsplit
 
 def open_website(url: str = "https://www.google.com") -> bool:
-    """Open a website in the default browser."""
-    if not url.startswith(("https://", "http://")):
-        raise ValueError("Only HTTP and HTTPS URLs are allowed.")
+    """Open a valid HTTP or HTTPS URL."""
+    if not isinstance(url, str) or not url.strip():
+        raise ValueError("A valid HTTP or HTTPS URL is required.")
+
+    url = url.strip()
+
+    try:
+        parsed = urlsplit(url)
+        hostname = parsed.hostname
+    except ValueError as error:
+        raise ValueError("Invalid URL.") from error
+
+    if parsed.scheme.lower() not in {"http", "https"} or not hostname:
+        raise ValueError("Only valid HTTP and HTTPS URLs are allowed.")
 
     return webbrowser.open(url)
+
 
 
 def open_chrome() -> bool:
