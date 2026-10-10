@@ -22,6 +22,18 @@ class TestCommandRouter(unittest.TestCase):
         self.assertEqual(result["skill"], "open_folder")
         self.assertEqual(result["target"], "downloads")
 
+    def test_tanglish_downloads_routes_to_folder_skill(self):
+        result = route_command("Downloads folder-ah open pannu")
+        self.assertEqual(result["intent"], "open_folder")
+        self.assertEqual(result["skill"], "open_folder")
+        self.assertEqual(result["target"], "downloads")
+
+    def test_tanglish_website_routes_to_browser(self):
+        result = route_command("YouTube website open pannu")
+        self.assertEqual(result["intent"], "open_website")
+        self.assertEqual(result["skill"], "open_browser")
+        self.assertEqual(result["target"], "youtube")
+
     def test_search_routes_to_find_files(self):
         result = route_command("Find PDF files")
         self.assertEqual(result["skill"], "find_files")
