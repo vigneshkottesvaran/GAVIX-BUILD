@@ -5,11 +5,37 @@ from src.skills.find_files import find_files
 from src.skills.move_file import move_file
 from src.skills.delete_file import delete_file
 from src.skills.delete_folder import delete_folder
+from src.core.intent_parser import parse_intent
+
 
 
 def handle_command(command: str) -> None:
+    parsed = parse_intent(command)
+    intent = parsed["intent"]
+
+    if intent == "exit":
+        return
+    elif intent == "open_chrome":
+        command = "open chrome"
+    elif intent == "open_website":
+        command = f"open website {parsed['target']}"
+    elif intent == "open_folder":
+        command = f"open {parsed['target']}"
+    elif intent == "find_files":
+        command = f"find files {parsed['target']}"
+    elif intent == "move_file":
+        command = "move file"
+    elif intent == "delete_file":
+        command = "delete file"
+    elif intent == "delete_folder":
+        command = "delete folder"
+    else:
+        print("GAVIX: Command not recognised yet.")
+        return
+
     command = command.strip()
     normalized = command.lower()
+
 
     if normalized in {"exit", "quit"}:
         return
